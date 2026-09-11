@@ -1,0 +1,3 @@
+Synthetic test fixture: one losslessly encoded 64x64 limited-range YUV420 black frame. Expected Y=16 and U=V=128. Generated with FFmpeg/libx265; no external media.
+
+ffmpeg -f lavfi -i color=black:s=64x64:r=1 -frames:v 1 -c:v libx265 -x265-params lossless=1:pools=none:frame-threads=1:info=0 -pix_fmt yuv420p -f hevc black.hevc

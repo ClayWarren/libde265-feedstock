@@ -11,7 +11,7 @@ source:
   sha256: fd48a927e94ed74fc7ce8829d222b9d8599fcbfe8b6448ba66705babc56ab219
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -46,6 +46,21 @@ tests:
         - dec265
   - script:
       - dec265 -h
+
+  - if: win and arm64
+    then:
+      requirements:
+        run:
+          - ${{ compiler('cxx') }}
+      files:
+        recipe:
+          - decode-test.cpp
+          - black.hevc
+      script:
+        - cl /nologo /MD /EHsc /I"%LIBRARY_INC%" decode-test.cpp /link /LIBPATH:"%LIBRARY_LIB%" de265.lib /OUT:decode-test.exe
+        - decode-test.exe
+        - dumpbin /headers "%LIBRARY_BIN%\libde265.dll" | findstr /I /C:"AA64 machine (ARM64)"
+        - dumpbin /headers decode-test.exe | findstr /I /C:"AA64 machine (ARM64)"
 
 about:
   homepage: http://www.libde265.org/
